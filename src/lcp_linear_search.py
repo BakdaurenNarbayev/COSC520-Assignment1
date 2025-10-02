@@ -25,7 +25,7 @@ class LCPLinearSearch(object):
         by going through all items, and update history
         '''
         for i in range(len(self.items)):
-            if (self.items[i] == item):
+            if self.items[i] == item:
                 self.history.append(True)
                 return True
         
