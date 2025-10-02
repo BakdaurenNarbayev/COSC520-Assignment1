@@ -42,7 +42,7 @@ def bloom_filter(input_sequence):
     # TODO: Implement efficiently
     return None
 
-def Cuckoo_filter(input_sequence):
+def cuckoo_filter(input_sequence):
     # TODO: Implement efficiently
     return None
 
@@ -57,29 +57,14 @@ def generate_strings():
 def compare_algorithms():
     # TODO: Draw a plot as N grows
     # TODO: Many randomized runs?
-    return None
-
-def unit_test(algorithm):
-    # TODO: More tests
     # TODO: Add runtime
     # TODO: Insertion, lookup, deletion
-    # TODO: check Unit test module
-    # Test #1
-    test1 = [chr(ord("a") + i) for i in range(26)] # i.e., ["a", "b", "c", ..., "x", "y", "z"]
-    if (algorithm == "linear_search"):
-        if (linear_search(test1) == [0 for i in range(len(test1))]):
-            print("Test #1 for " + algorithm + " is successful!")
-        else :
-            print("Test #1 for " + algorithm + " FAILED!")
     return None
-
-
 
 ###----------------------- Main -----------------------###
 
 def main():
-    # TODO: Run unit tests on algorithms
-    unit_test("linear_search")
+    return None
 
 if __name__ == "__main__":
     main()
