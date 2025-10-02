@@ -5,6 +5,7 @@
 
 from lcp_linear_search import LCPLinearSearch
 from lcp_binary_search import LCPBinarySearch
+from lcp_hash_table import LCPHashTable
 import pytest
 
 # TODO: More tests
@@ -25,6 +26,7 @@ answers.append( [False, False, True, False, True, True] )
 tests.append( [chr(ord("a") + i) for i in range(26)] ) 
 answers.append( [False for i in range(26)] )
 
+# Testing Linear Search Approach
 def test_lcp_linear_search():
     for i in range(len(tests)): 
         current_test = tests[i]
@@ -35,6 +37,7 @@ def test_lcp_linear_search():
                 linear_search.add(item)
         assert linear_search.show_history() == answers[i]
 
+# Testing Binary Search Approach
 def test_lcp_binary_search():
     for i in range(len(tests)): 
         current_test = tests[i]
@@ -44,3 +47,14 @@ def test_lcp_binary_search():
             if not binary_search.check(item):
                 binary_search.add(item)
         assert binary_search.show_history() == answers[i]
+
+# Testing Hash Table Approach
+def test_lcp_hash_table():
+    for i in range(len(tests)): 
+        current_test = tests[i]
+        hash_table = LCPHashTable(11)
+
+        for item in current_test:
+            if not hash_table.check(item):
+                hash_table.add(item)
+        assert hash_table.show_history() == answers[i]

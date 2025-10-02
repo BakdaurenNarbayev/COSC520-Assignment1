@@ -1,4 +1,4 @@
-# LCP Binary Search Algorithm
+# LCP Binary Search Approach
 
 class LCPBinarySearch(object):
     '''

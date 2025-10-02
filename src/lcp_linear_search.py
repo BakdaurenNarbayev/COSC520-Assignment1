@@ -1,4 +1,4 @@
-# LCP Linear Search Algorithm
+# LCP Linear Search Approach
 
 class LCPLinearSearch(object):
     '''
