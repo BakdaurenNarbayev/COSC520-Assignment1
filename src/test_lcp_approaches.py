@@ -1,4 +1,4 @@
-# Unit tests for algorithms
+# Unit tests for LCP approaches
 # Install pytest module to run
 # pip install pytest
 # use command "pytest" to run the unit tests
@@ -9,24 +9,9 @@ from lcp_hash_table import LCPHashTable
 from lcp_bloom_filter import LCPBloomFilter
 from lcp_cuckoo_filter import LCPCuckooFilter
 
-import random
+from lcp_approaches import generate_strings
+
 import pytest
-
-# TODO: More/better tests with edge cases
-
-def generate_strings(num, length = 10):
-    '''
-        Generate num number of strings with the set lenght
-        num : int
-            number of strings
-        length : int
-            length of each string
-    '''
-    strings = []
-    letters = [chr(ord("a") + i) for i in range(26)]
-    for i in range(num):
-        strings.append(''.join(random.choice(letters) for _ in range(length)))
-    return strings
 
 tests = []
 answers = []

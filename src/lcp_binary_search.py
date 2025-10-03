@@ -40,11 +40,8 @@ class LCPBinarySearch(object):
         '''
         Add an item to the list at the appropriate index
         '''
-        print(item)
-        print(self.find_index(item))
-        print(self.sorted_items)
-        self.sorted_items.insert(self.find_index(item), item)
-        print(self.sorted_items)
+        if not self.check(item):
+            self.sorted_items.insert(self.find_index(item), item)
 
     def check(self, item):
         '''
