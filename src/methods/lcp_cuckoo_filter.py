@@ -61,40 +61,38 @@ class LCPCuckooFilter(object):
 
     def add(self, item):
         '''
-        Add an item in the filter if it is new
+        Add an item in the filter
         '''
-        if not self.check(item):
-            f, i1, i2 = self.find_indices(item)
+        f, i1, i2 = self.find_indices(item)
 
-            # If one of those buckets has an available slot, add/insert item there
-            if len(self.fingerprints[i1]) < self.bucket_size:
-                self.fingerprints[i1].append(f)
+        # If one of those buckets has an available slot, add/insert item there
+        if len(self.fingerprints[i1]) < self.bucket_size:
+            self.fingerprints[i1].append(f)
+            return True
+        
+        if len(self.fingerprints[i2]) < self.bucket_size:
+            self.fingerprints[i2].append(f)
+            return True
+        
+        # If both buckets are full, choose one randomly and
+        # swap a random item in that bucket with new item and
+        # check second bucket for kicked item, and
+        # if spot is available insert it there, otherwise
+        # repeat this process until max number of kicks reached
+        i = random.choice([i1, i2])
+        for n in range(self.max_number_of_kicks):
+            idx = random.randrange(len(self.fingerprints[i]))
+            e = self.fingerprints[i][idx]
+            self.fingerprints[i][idx] = f
+            f = e
+            # Convert integer to bytes (4 bytes, big-endian)
+            fB = f.to_bytes(4, byteorder='big')
+            i = (i ^ self.hash(fB)) % self.table_size
+            if len(self.fingerprints[i]) < self.bucket_size:
+                self.fingerprints[i].append(f)
                 return True
-            
-            if len(self.fingerprints[i2]) < self.bucket_size:
-                self.fingerprints[i2].append(f)
-                return True
-            
-            # If both buckets are full, choose one randomly and
-            # swap a random item in that bucket with new item and
-            # check second bucket for kicked item, and
-            # if spot is available insert it there, otherwise
-            # repeat this process until max number of kicks reached
-            i = random.choice([i1, i2])
-            for n in range(self.max_number_of_kicks):
-                idx = random.randrange(len(self.fingerprints[i]))
-                e = self.fingerprints[i][idx]
-                self.fingerprints[i][idx] = f
-                f = e
-                # Convert integer to bytes (4 bytes, big-endian)
-                fB = f.to_bytes(4, byteorder='big')
-                i = (i ^ self.hash(fB)) % self.table_size
-                if len(self.fingerprints[i]) < self.bucket_size:
-                    self.fingerprints[i].append(f)
-                    return True
-                # If no spot found, consider the table as full, i.e. insertion failed
-                return False
-        # If item is already here
+        
+        # If no spot found, consider the table as full, i.e. insertion failed
         return False
 
     def check(self, item):

@@ -10,8 +10,11 @@ def generate_strings(num, length = 10):
         length : int
             length of each string
     '''
-    strings = []
+    strings = set() # no duplicates
     letters = [chr(ord("a") + i) for i in range(26)]
-    for i in range(num):
-        strings.append(''.join(random.choice(letters) for _ in range(length)))
-    return strings
+
+    while len(strings) < num:
+        s = ''.join(random.choice(letters) for _ in range(length))
+        strings.add(s)
+
+    return list(strings)

@@ -33,10 +33,9 @@ class LCPBinarySearch(object):
 
     def add(self, item):
         '''
-        Add an item to the list at the appropriate index if it is new
+        Add an item to the list at the appropriate index
         '''
-        if not self.check(item):
-            self.sorted_items.insert(self.find_index(item), item)
+        self.sorted_items.insert(self.find_index(item), item)
 
     def check(self, item):
         '''

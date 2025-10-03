@@ -10,10 +10,9 @@ class LCPLinearSearch(object):
 
     def add(self, item):
         '''
-        Add an item to the list if it is new
+        Add an item to the list
         '''
-        if not self.check(item):
-            self.items.append(item)
+        self.items.append(item)
 
     def check(self, item):
         '''

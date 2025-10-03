@@ -36,7 +36,8 @@ def test_lcp_linear_search():
         linear_search = LCPLinearSearch()
 
         for item in current_test:
-            linear_search.add(item)
+            if not linear_search.check(item):
+                linear_search.add(item)
         assert len(linear_search.items) == answers[i]
 
 # Testing Binary Search Approach
@@ -46,7 +47,8 @@ def test_lcp_binary_search():
         binary_search = LCPBinarySearch()
 
         for item in current_test:
-            binary_search.add(item)
+            if not binary_search.check(item):
+                binary_search.add(item)
         assert len(binary_search.sorted_items) == answers[i]
 
 # Testing Hash Table Approach
@@ -56,7 +58,8 @@ def test_lcp_hash_table():
         hash_table = LCPHashTable(11)
 
         for item in current_test:
-            hash_table.add(item)
+            if not hash_table.check(item):
+                hash_table.add(item)
         assert hash_table.check(current_test[-1])
 
 # Testing Bloom Filter Approach

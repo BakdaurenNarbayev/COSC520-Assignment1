@@ -37,7 +37,7 @@ class LCPBloomFilter(object):
     
     def add(self, item):
         '''
-        Add an item in the filter (no need to check if it is new)
+        Add an item in the filter
         '''
         digests = []
         for i in range(self.hash_count):

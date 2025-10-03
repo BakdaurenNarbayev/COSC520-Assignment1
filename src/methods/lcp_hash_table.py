@@ -28,10 +28,9 @@ class LCPHashTable(object):
 
     def add(self, item):
         '''
-        Add an item to the hash table if it is new
+        Add an item to the hash table
         '''
-        if not self.check(item):
-            self.items[self.hash(item)].append(item)
+        self.items[self.hash(item)].append(item)
 
     def check(self, item):
         '''
