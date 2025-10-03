@@ -8,9 +8,25 @@ from lcp_binary_search import LCPBinarySearch
 from lcp_hash_table import LCPHashTable
 from lcp_bloom_filter import LCPBloomFilter
 from lcp_cuckoo_filter import LCPCuckooFilter
+
+import random
 import pytest
 
 # TODO: More/better tests with edge cases
+
+def generate_strings(num, length = 10):
+    '''
+        Generate num number of strings with the set lenght
+        num : int
+            number of strings
+        length : int
+            length of each string
+    '''
+    strings = []
+    letters = [chr(ord("a") + i) for i in range(26)]
+    for i in range(num):
+        strings.append(''.join(random.choice(letters) for _ in range(length)))
+    return strings
 
 tests = []
 answers = []
@@ -80,15 +96,28 @@ def test_lcp_bloom_filter():
             bloom_filter.add(item)
         assert bloom_filter.check(item)
 
-    # TODO: test on more words to see false positive probability
-    '''
+    # Test on more words to see false positive probability
+    n = 1000000
+    bloom_filter = LCPBloomFilter(n, p)
+
+    current_test = generate_strings(1000000, 6)
+    inserted_set = set()
+    
     for item in current_test:
         if not bloom_filter.check(item):
             bloom_filter.add(item)
-    number_of_positives = bloom_filter.show_history().count(True)
-    number_of_false_positives = number_of_positives - answers[i].count(True)
-    assert number_of_false_positives / number_of_positives <= p
-    '''
+            inserted_set.add(item)
+
+    # Measure false positive rate with new random strings
+    false_positive_count = 0
+
+    new_random_strings = generate_strings(10000, 6)
+
+    for item in new_random_strings:
+        if item not in inserted_set and bloom_filter.check(item):
+            false_positive_count += 1
+
+    assert false_positive_count / len(new_random_strings) <= p
     
 # Testing Cuckoo Filter Approach
 def test_lcp_cuckoo_filter():
@@ -96,6 +125,7 @@ def test_lcp_cuckoo_filter():
     b = 4 # bucket size
     fb = 8 # fingerprint size
     k = 500 # max number of kicks
+    p = 0.05 # false positive probability
     
     cuckoo_filter = LCPCuckooFilter(n, b, fb, k)
 
@@ -111,12 +141,26 @@ def test_lcp_cuckoo_filter():
             cuckoo_filter.add(item)
         assert cuckoo_filter.check(item)
 
-    # TODO: test on more words to see false positive probability
-    '''
+    # Test on more words to see false positive probability
+    n = 1000000
+    fb = 12 # fingerprint size
+    cuckoo_filter = LCPCuckooFilter(n, b, fb, k)
+
+    current_test = generate_strings(1000000, 6)
+    inserted_set = set()
+    
     for item in current_test:
         if not cuckoo_filter.check(item):
-            cuckoo_filter.add(item)
-    number_of_positives = cuckoo_filter.show_history().count(True)
-    number_of_false_positives = number_of_positives - answers[i].count(True)
-    assert number_of_false_positives / number_of_positives <= p
-    '''
+            if cuckoo_filter.add(item): # if insertion succeded
+                inserted_set.add(item)
+
+    # Measure false positive rate with new random strings
+    false_positive_count = 0
+
+    new_random_strings = generate_strings(10000, 6)
+
+    for item in new_random_strings:
+        if item not in inserted_set and cuckoo_filter.check(item):
+            false_positive_count += 1
+
+    assert false_positive_count / len(new_random_strings) <= p

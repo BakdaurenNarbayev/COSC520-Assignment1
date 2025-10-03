@@ -44,9 +44,9 @@ class LCPCuckooFilter(object):
 
     def hash(self, val):
         '''
-        Simple hash function using MurmurHash and size of the table
+        Simple hash function using MurmurHash
         '''
-        return mmh3.hash(val) % self.table_size
+        return mmh3.hash(val)
 
     def fingerprint(self, item):
         '''
@@ -61,7 +61,7 @@ class LCPCuckooFilter(object):
         '''
         # Calculate fingerprint f, bucket indeces i1 and i2
         f = self.fingerprint(item)
-        i1 = self.hash(item)
+        i1 = self.hash(item) % self.table_size
         # Convert integer to bytes (4 bytes, big-endian)
         fB = f.to_bytes(4, byteorder='big')
         i2 = (i1 ^ self.hash(fB)) % self.table_size
@@ -82,10 +82,13 @@ class LCPCuckooFilter(object):
         # repeat this process until max number of kicks reached
         i = random.choice([i1, i2])
         for n in range(self.max_number_of_kicks):
-            e = random.choice(self.fingerprints[i])
-            self.fingerprints[i] = f
+            idx = random.randrange(len(self.fingerprints[i]))
+            e = self.fingerprints[i][idx]
+            self.fingerprints[i][idx] = f
             f = e
-            i = i ^ self.hash(f)
+            # Convert integer to bytes (4 bytes, big-endian)
+            fB = f.to_bytes(4, byteorder='big')
+            i = (i ^ self.hash(fB)) % self.table_size
             if len(self.fingerprints[i]) < self.bucket_size:
                 self.fingerprints[i].append(f)
                 return True
@@ -100,7 +103,7 @@ class LCPCuckooFilter(object):
         '''
         # Calculate fingerprint f, bucket indeces i1 and i2
         f = self.fingerprint(item)
-        i1 = self.hash(item)
+        i1 = self.hash(item) % self.table_size
         # Convert integer to bytes (4 bytes, big-endian)
         fB = f.to_bytes(4, byteorder='big')
         i2 = (i1 ^ self.hash(fB)) % self.table_size
