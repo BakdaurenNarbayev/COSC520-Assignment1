@@ -3,13 +3,13 @@
 # pip install pytest
 # use command "pytest" to run the unit tests
 
-from lcp_linear_search import LCPLinearSearch
-from lcp_binary_search import LCPBinarySearch
-from lcp_hash_table import LCPHashTable
-from lcp_bloom_filter import LCPBloomFilter
-from lcp_cuckoo_filter import LCPCuckooFilter
+from methods.lcp_linear_search import LCPLinearSearch
+from methods.lcp_binary_search import LCPBinarySearch
+from methods.lcp_hash_table import LCPHashTable
+from methods.lcp_bloom_filter import LCPBloomFilter
+from methods.lcp_cuckoo_filter import LCPCuckooFilter
 
-from lcp_string_generation import generate_strings
+from utils.string_generation import generate_strings
 
 import pytest
 

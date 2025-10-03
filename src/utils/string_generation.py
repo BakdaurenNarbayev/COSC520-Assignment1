@@ -1,4 +1,4 @@
-# LCP String Generation
+# String Generation
 
 import random
 
