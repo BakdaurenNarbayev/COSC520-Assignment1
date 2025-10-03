@@ -6,9 +6,10 @@
 from lcp_linear_search import LCPLinearSearch
 from lcp_binary_search import LCPBinarySearch
 from lcp_hash_table import LCPHashTable
+from lcp_bloom_filter import LCPBloomFilter
 import pytest
 
-# TODO: More tests
+# TODO: More/better tests with edge cases
 
 tests = []
 answers = []
@@ -25,6 +26,9 @@ answers.append( [False, False, True, False, True, True] )
 # ["a", "b", "c", ..., "x", "y", "z"]
 tests.append( [chr(ord("a") + i) for i in range(26)] ) 
 answers.append( [False for i in range(26)] )
+
+# Test #4
+
 
 # Testing Linear Search Approach
 def test_lcp_linear_search():
@@ -58,3 +62,32 @@ def test_lcp_hash_table():
             if not hash_table.check(item):
                 hash_table.add(item)
         assert hash_table.show_history() == answers[i]
+
+# Testing Bloom Filter Approach
+def test_lcp_bloom_filter():
+    n = 20 # number of items to add
+    p = 0.05 # false positive probability
+    
+    bloom_filter = LCPBloomFilter(n, p)
+
+    # No item has been added
+    current_test = tests[2] # ["a", "b", "c", ..., "x", "y", "z"]
+    for item in current_test:
+        assert not bloom_filter.check(item)
+
+    # Add items and check in the filter (no false negatives)
+    current_test = tests[2] # ["a", "b", "c", ..., "x", "y", "z"]
+    for item in current_test:
+        if not bloom_filter.check(item):
+            bloom_filter.add(item)
+        assert bloom_filter.check(item)
+
+    # TODO: test on more words to see false positive probability
+    '''
+    for item in current_test:
+        if not bloom_filter.check(item):
+            bloom_filter.add(item)
+    number_of_positives = bloom_filter.show_history().count(True)
+    number_of_false_positives = number_of_positives - answers[i].count(True)
+    assert number_of_false_positives / number_of_positives <= p
+    '''

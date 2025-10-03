@@ -5,6 +5,10 @@ class LCPHashTable(object):
     Class for Hash Table
     '''
     def __init__(self, size):
+        '''
+        size : int
+            Number of buckets in the hash table
+        '''
         # Size of the hash table
         self.size = size
 
