@@ -1,5 +1,10 @@
 # LCP Hash Table Approach with Separate Chaining
 
+# Install mmh3 module first
+# pip install mmh3
+
+import mmh3
+
 class LCPHashTable(object):
     '''
     Class for Hash Table
@@ -22,9 +27,9 @@ class LCPHashTable(object):
 
     def hash(self, item):
         '''
-        Simple hash function using built-in hash funtion and size of the table
+        Simple hash function using MurmurHash and size of the table
         '''
-        return hash(item) % self.size
+        return mmh3.hash(item) % self.size
 
     def add(self, item):
         '''

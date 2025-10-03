@@ -36,7 +36,7 @@ class LCPBloomFilter(object):
         self.bit_array.setall(0)
 
         # History of checks
-        # True if checked item is already in the list, 
+        # True if checked item is probably in the list, 
         # and False if it is not
         self.history = []
     

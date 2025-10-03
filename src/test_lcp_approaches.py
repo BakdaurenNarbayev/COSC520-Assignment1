@@ -7,6 +7,7 @@ from lcp_linear_search import LCPLinearSearch
 from lcp_binary_search import LCPBinarySearch
 from lcp_hash_table import LCPHashTable
 from lcp_bloom_filter import LCPBloomFilter
+from lcp_cuckoo_filter import LCPCuckooFilter
 import pytest
 
 # TODO: More/better tests with edge cases
@@ -26,9 +27,6 @@ answers.append( [False, False, True, False, True, True] )
 # ["a", "b", "c", ..., "x", "y", "z"]
 tests.append( [chr(ord("a") + i) for i in range(26)] ) 
 answers.append( [False for i in range(26)] )
-
-# Test #4
-
 
 # Testing Linear Search Approach
 def test_lcp_linear_search():
@@ -88,6 +86,37 @@ def test_lcp_bloom_filter():
         if not bloom_filter.check(item):
             bloom_filter.add(item)
     number_of_positives = bloom_filter.show_history().count(True)
+    number_of_false_positives = number_of_positives - answers[i].count(True)
+    assert number_of_false_positives / number_of_positives <= p
+    '''
+    
+# Testing Cuckoo Filter Approach
+def test_lcp_cuckoo_filter():
+    n = 40 # number of items to add
+    b = 4 # bucket size
+    fb = 8 # fingerprint size
+    k = 500 # max number of kicks
+    
+    cuckoo_filter = LCPCuckooFilter(n, b, fb, k)
+
+    # No item has been added
+    current_test = tests[2] # ["a", "b", "c", ..., "x", "y", "z"]
+    for item in current_test:
+        assert not cuckoo_filter.check(item)
+
+    # Add items and check in the filter (no false negatives)
+    current_test = tests[2] # ["a", "b", "c", ..., "x", "y", "z"]
+    for item in current_test:
+        if not cuckoo_filter.check(item):
+            cuckoo_filter.add(item)
+        assert cuckoo_filter.check(item)
+
+    # TODO: test on more words to see false positive probability
+    '''
+    for item in current_test:
+        if not cuckoo_filter.check(item):
+            cuckoo_filter.add(item)
+    number_of_positives = cuckoo_filter.show_history().count(True)
     number_of_false_positives = number_of_positives - answers[i].count(True)
     assert number_of_false_positives / number_of_positives <= p
     '''
