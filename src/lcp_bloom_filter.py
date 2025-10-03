@@ -34,15 +34,10 @@ class LCPBloomFilter(object):
 
         # initialize all bits as 0
         self.bit_array.setall(0)
-
-        # History of checks
-        # True if checked item is probably in the list, 
-        # and False if it is not
-        self.history = []
     
     def add(self, item):
         '''
-        Add an item in the filter
+        Add an item in the filter (no need to check if it is new)
         '''
         digests = []
         for i in range(self.hash_count):
@@ -64,9 +59,7 @@ class LCPBloomFilter(object):
             if self.bit_array[digest] == False:
                 # if any of bit is False then,its not present in the filter
                 # else there is probability that it exist
-                self.history.append(False)
                 return False
-        self.history.append(True)
         return True
 
     @classmethod
@@ -97,9 +90,3 @@ class LCPBloomFilter(object):
         '''
         k = (m/n) * math.log(2)
         return int(k)
-        
-    def show_history(self):
-        '''
-        Show history of calls to funtion "check" and corresponding results
-        '''
-        return self.history

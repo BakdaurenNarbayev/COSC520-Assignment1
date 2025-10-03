@@ -8,32 +8,19 @@ class LCPLinearSearch(object):
         # List of used items (e.g., logins)
         self.items = []
 
-        # History of checks
-        # True if checked item is already in the list, 
-        # and False if it is not
-        self.history = []
-
     def add(self, item):
         '''
-        Add an item to the list
+        Add an item to the list if it is new
         '''
-        self.items.append(item)
+        if not self.check(item):
+            self.items.append(item)
 
     def check(self, item):
         '''
         Check for existence of an item in the list
-        by going through all items, and update history
+        by going through all items
         '''
-        for i in range(len(self.items)):
-            if self.items[i] == item:
-                self.history.append(True)
+        for _item in self.items:
+            if _item == item:
                 return True
-        
-        self.history.append(False)
         return False
-        
-    def show_history(self):
-        '''
-        Show history of calls to funtion "check" and corresponding results
-        '''
-        return self.history

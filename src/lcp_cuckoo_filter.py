@@ -37,11 +37,6 @@ class LCPCuckooFilter(object):
         # Hash table of fingerprints (e.g., of logins)
         self.fingerprints = [[] for i in range(self.table_size)]
 
-        # History of checks
-        # True if checked item is probably in the list, 
-        # and False if it is not
-        self.history = []
-
     def hash(self, val):
         '''
         Simple hash function using MurmurHash
@@ -54,46 +49,52 @@ class LCPCuckooFilter(object):
         hash function and fingerprint mask
         '''
         return self.hash(item) & self.fingerprint_mask
-
-    def add(self, item):
-        '''
-        Add an item in the filter
-        '''
+    
+    def find_indices(self, item):
         # Calculate fingerprint f, bucket indeces i1 and i2
         f = self.fingerprint(item)
         i1 = self.hash(item) % self.table_size
         # Convert integer to bytes (4 bytes, big-endian)
         fB = f.to_bytes(4, byteorder='big')
         i2 = (i1 ^ self.hash(fB)) % self.table_size
+        return f, i1, i2
 
-        # If one of those buckets has an available slot, add/insert item there
-        if len(self.fingerprints[i1]) < self.bucket_size:
-            self.fingerprints[i1].append(f)
-            return True
-        
-        if len(self.fingerprints[i2]) < self.bucket_size:
-            self.fingerprints[i2].append(f)
-            return True
-        
-        # If both buckets are full, choose one randomly and
-        # swap a random item in that bucket with new item and
-        # check second bucket for kicked item, and
-        # if spot is available insert it there, otherwise
-        # repeat this process until max number of kicks reached
-        i = random.choice([i1, i2])
-        for n in range(self.max_number_of_kicks):
-            idx = random.randrange(len(self.fingerprints[i]))
-            e = self.fingerprints[i][idx]
-            self.fingerprints[i][idx] = f
-            f = e
-            # Convert integer to bytes (4 bytes, big-endian)
-            fB = f.to_bytes(4, byteorder='big')
-            i = (i ^ self.hash(fB)) % self.table_size
-            if len(self.fingerprints[i]) < self.bucket_size:
-                self.fingerprints[i].append(f)
+    def add(self, item):
+        '''
+        Add an item in the filter if it is new
+        '''
+        if not self.check(item):
+            f, i1, i2 = self.find_indices(item)
+
+            # If one of those buckets has an available slot, add/insert item there
+            if len(self.fingerprints[i1]) < self.bucket_size:
+                self.fingerprints[i1].append(f)
                 return True
             
-        # If no spot found, consider the table as full, i.e. insertion failed
+            if len(self.fingerprints[i2]) < self.bucket_size:
+                self.fingerprints[i2].append(f)
+                return True
+            
+            # If both buckets are full, choose one randomly and
+            # swap a random item in that bucket with new item and
+            # check second bucket for kicked item, and
+            # if spot is available insert it there, otherwise
+            # repeat this process until max number of kicks reached
+            i = random.choice([i1, i2])
+            for n in range(self.max_number_of_kicks):
+                idx = random.randrange(len(self.fingerprints[i]))
+                e = self.fingerprints[i][idx]
+                self.fingerprints[i][idx] = f
+                f = e
+                # Convert integer to bytes (4 bytes, big-endian)
+                fB = f.to_bytes(4, byteorder='big')
+                i = (i ^ self.hash(fB)) % self.table_size
+                if len(self.fingerprints[i]) < self.bucket_size:
+                    self.fingerprints[i].append(f)
+                    return True
+                # If no spot found, consider the table as full, i.e. insertion failed
+                return False
+        # If item is already here
         return False
 
     def check(self, item):
@@ -101,25 +102,11 @@ class LCPCuckooFilter(object):
         Check for existence of an item in the filter
         by checking buckets associated with it, and update history
         '''
-        # Calculate fingerprint f, bucket indeces i1 and i2
-        f = self.fingerprint(item)
-        i1 = self.hash(item) % self.table_size
-        # Convert integer to bytes (4 bytes, big-endian)
-        fB = f.to_bytes(4, byteorder='big')
-        i2 = (i1 ^ self.hash(fB)) % self.table_size
+        f, i1, i2 = self.find_indices(item)
 
         # Combine buckets and check for the fingerprint
         buckets = self.fingerprints[i1] + self.fingerprints[i2]
         for bucket_item in buckets:
             if bucket_item == f:
-                self.history.append(True)
                 return True
-        
-        self.history.append(False)
         return False
-        
-    def show_history(self):
-        '''
-        Show history of calls to funtion "check" and corresponding results
-        '''
-        return self.history

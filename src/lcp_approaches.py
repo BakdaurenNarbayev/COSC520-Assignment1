@@ -3,23 +3,10 @@
 # pip install matplotlib
 # use command "python lcp_approaches" to run the unit tests
 
-import random
+from lcp_string_generation import generate_strings
+
 import timeit
 import matplotlib.pyplot as plt
-
-def generate_strings(num, length = 10):
-    '''
-        Generate num number of strings with the set lenght
-        num : int
-            number of strings
-        length : int
-            length of each string
-    '''
-    strings = []
-    letters = [chr(ord("a") + i) for i in range(26)]
-    for i in range(num):
-        strings.append(''.join(random.choice(letters) for _ in range(length)))
-    return strings
 
 # sizes to test
 sizes = [10 ** i for i in range(1, 5)]  # 10, 100, 1 000, 10 000, 100 000, 1 000 000
@@ -44,8 +31,7 @@ for n in sizes:
         "linear_search = LCPLinearSearch()\n"
         f"current_test = generate_strings({n})\n"
         "for item in current_test:\n"
-        "\tif not linear_search.check(item):\n"
-        "\t\tlinear_search.add(item)\n"
+        "\tlinear_search.add(item)\n"
     )
 
     binary_search_setup_code = (
@@ -54,8 +40,7 @@ for n in sizes:
         "binary_search = LCPBinarySearch()\n"
         f"current_test = generate_strings({n})\n"
         "for item in current_test:\n"
-        "\tif not binary_search.check(item):\n"
-        "\t\tbinary_search.add(item)\n"
+        "\tbinary_search.add(item)\n"
     )
 
     hash_table_setup_code = (
@@ -64,8 +49,7 @@ for n in sizes:
         f"hash_table = LCPHashTable({n}//4)\n"
         f"current_test = generate_strings({n})\n"
         "for item in current_test:\n"
-        "\tif not hash_table.check(item):\n"
-        "\t\thash_table.add(item)\n"
+        "\thash_table.add(item)\n"
     )
 
     bloom_filter_setup_code = (
@@ -74,8 +58,7 @@ for n in sizes:
         f"bloom_filter = LCPBloomFilter({n}, 0.05)\n"
         f"current_test = generate_strings({n})\n"
         "for item in current_test:\n"
-        "\tif not bloom_filter.check(item):\n"
-        "\t\tbloom_filter.add(item)\n"
+        "\tbloom_filter.add(item)\n"
     )
 
     cuckoo_filter_setup_code = (
@@ -84,8 +67,7 @@ for n in sizes:
         f"cuckoo_filter = LCPCuckooFilter({n}, 4, 12, 500)\n"
         f"current_test = generate_strings({n})\n"
         "for item in current_test:\n"
-        "\tif not cuckoo_filter.check(item):\n"
-        "\t\tcuckoo_filter.add(item)\n"
+        "\tcuckoo_filter.add(item)\n"
     )
 
     # Measure check()

@@ -18,12 +18,7 @@ class LCPHashTable(object):
         self.size = size
 
         # Hash table of used items (e.g., logins)
-        self.items = [[] for i in range(size)]
-
-        # History of checks
-        # True if checked item is already in the list, 
-        # and False if it is not
-        self.history = []
+        self.items = [[] for _ in range(size)]
 
     def hash(self, item):
         '''
@@ -33,27 +28,18 @@ class LCPHashTable(object):
 
     def add(self, item):
         '''
-        Add an item to the hash table using hash value
+        Add an item to the hash table if it is new
         '''
-        self.items[self.hash(item)].append(item)
+        if not self.check(item):
+            self.items[self.hash(item)].append(item)
 
     def check(self, item):
         '''
         Check for existence of an item in the hash table
-        by checking bucket associated with hash value, and update history
+        by checking bucket associated with hash value
         '''
         bucket = self.items[self.hash(item)]
-
         for bucket_item in bucket:
             if bucket_item == item:
-                self.history.append(True)
                 return True
-        
-        self.history.append(False)
         return False
-        
-    def show_history(self):
-        '''
-        Show history of calls to funtion "check" and corresponding results
-        '''
-        return self.history

@@ -9,7 +9,7 @@ from lcp_hash_table import LCPHashTable
 from lcp_bloom_filter import LCPBloomFilter
 from lcp_cuckoo_filter import LCPCuckooFilter
 
-from lcp_approaches import generate_strings
+from lcp_string_generation import generate_strings
 
 import pytest
 
@@ -18,16 +18,16 @@ answers = []
 
 # Test #1
 tests.append( ["a", "a", "b", "b"] )
-answers.append( [False, True, False, True] )
+answers.append( 2 )
 
 # Test #2
 tests.append( ["a", "b", "a", "c", "b", "c"] )
-answers.append( [False, False, True, False, True, True] )
+answers.append( 3 )
 
 # Test #3
 # ["a", "b", "c", ..., "x", "y", "z"]
 tests.append( [chr(ord("a") + i) for i in range(26)] ) 
-answers.append( [False for i in range(26)] )
+answers.append( 26 )
 
 # Testing Linear Search Approach
 def test_lcp_linear_search():
@@ -36,9 +36,8 @@ def test_lcp_linear_search():
         linear_search = LCPLinearSearch()
 
         for item in current_test:
-            if not linear_search.check(item):
-                linear_search.add(item)
-        assert linear_search.show_history() == answers[i]
+            linear_search.add(item)
+        assert len(linear_search.items) == answers[i]
 
 # Testing Binary Search Approach
 def test_lcp_binary_search():
@@ -47,9 +46,8 @@ def test_lcp_binary_search():
         binary_search = LCPBinarySearch()
 
         for item in current_test:
-            if not binary_search.check(item):
-                binary_search.add(item)
-        assert binary_search.show_history() == answers[i]
+            binary_search.add(item)
+        assert len(binary_search.sorted_items) == answers[i]
 
 # Testing Hash Table Approach
 def test_lcp_hash_table():
@@ -58,9 +56,8 @@ def test_lcp_hash_table():
         hash_table = LCPHashTable(11)
 
         for item in current_test:
-            if not hash_table.check(item):
-                hash_table.add(item)
-        assert hash_table.show_history() == answers[i]
+            hash_table.add(item)
+        assert hash_table.check(current_test[-1])
 
 # Testing Bloom Filter Approach
 def test_lcp_bloom_filter():

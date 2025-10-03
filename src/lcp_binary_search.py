@@ -8,11 +8,6 @@ class LCPBinarySearch(object):
         # Sorted list of used items (e.g., logins)
         self.sorted_items = []
 
-        # History of checks
-        # True if checked item is already in the list, 
-        # and False if it is not
-        self.history = []
-
     def find_index(self, item):
         '''
         Find an index in the list (via binary search)
@@ -38,7 +33,7 @@ class LCPBinarySearch(object):
 
     def add(self, item):
         '''
-        Add an item to the list at the appropriate index
+        Add an item to the list at the appropriate index if it is new
         '''
         if not self.check(item):
             self.sorted_items.insert(self.find_index(item), item)
@@ -46,21 +41,11 @@ class LCPBinarySearch(object):
     def check(self, item):
         '''
         Check for existence of an item in the sorted list
-        by finding its possible index using binary search, 
-        and update history
+        by finding its possible index using binary search
         '''
         potential_index = self.find_index(item)
         # Check if potential index is within the list range 
         # and list item on that index is equal to item of interest
         if potential_index < len(self.sorted_items) and self.sorted_items[potential_index] == item:
-            self.history.append(True)
             return True
-        
-        self.history.append(False)
         return False
-        
-    def show_history(self):
-        '''
-        Show history of calls to funtion "check" and corresponding results
-        '''
-        return self.history
