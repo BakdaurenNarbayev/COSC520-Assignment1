@@ -1,5 +1,5 @@
 # LCP Bloom Filter Approach
-# Based on: https://www.geeksforgeeks.org/python/bloom-filters-introduction-and-python-implementation/
+# Source: https://www.geeksforgeeks.org/python/bloom-filters-introduction-and-python-implementation/
 
 # Install mmh3 and bitarray 3rd party module first
 # pip install mmh3

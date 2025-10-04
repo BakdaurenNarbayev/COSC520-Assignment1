@@ -45,11 +45,10 @@ def run_benchmark(operation, max_exp):
             # For add benchmark, time adding all elements (new ones)
             new_items = generated_strings[n : n + 1000]
 
-            if operation == "check":
-                # For check tests, pick 500 items (or min(n, 500)) from current_test and new_items
-                check_test = random.sample(current_test, min(n, 500))
-                check_new_items = random.sample(new_items, min(n, 500))
-                check_test.extend(check_new_items)
+            # For check tests, pick 500 items (or min(n, 500)) from current_test and new_items
+            check_test = random.sample(current_test, min(n, 500))
+            check_new_items = random.sample(new_items, min(n, 500))
+            check_test.extend(check_new_items)
 
             for method in methods:
                 if method == "Linear Search":

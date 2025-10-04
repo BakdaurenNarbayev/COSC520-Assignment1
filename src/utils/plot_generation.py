@@ -2,7 +2,6 @@
 # Install matplotlib module to run
 # pip install matplotlib
 
-import random
 import matplotlib.pyplot as plt
 
 def generate_plots(x, y, labels, title):

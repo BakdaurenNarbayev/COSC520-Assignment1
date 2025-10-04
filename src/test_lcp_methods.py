@@ -1,4 +1,4 @@
-# Unit tests for LCP approaches
+# Unit tests for LCP Methodes
 # Install pytest module to run
 # pip install pytest
 # use command "pytest" to run the unit tests
@@ -18,53 +18,59 @@ answers = []
 
 # Test #1
 tests.append( ["a", "a", "b", "b"] )
-answers.append( 2 )
+answers.append( [False, True, False, True] )
 
 # Test #2
 tests.append( ["a", "b", "a", "c", "b", "c"] )
-answers.append( 3 )
+answers.append( [False, False, True, False, True, True] )
 
 # Test #3
 # ["a", "b", "c", ..., "x", "y", "z"]
 tests.append( [chr(ord("a") + i) for i in range(26)] ) 
-answers.append( 26 )
+answers.append( [False for _ in range(26)] )
 
-# Testing Linear Search Approach
+# Testing Linear Search Method
 def test_lcp_linear_search():
     for i in range(len(tests)): 
         current_test = tests[i]
         linear_search = LCPLinearSearch()
 
-        for item in current_test:
+        for j in range(len(current_test)):
+            item = current_test[j]
+            assert linear_search.check(item) == answers[i][j]
             if not linear_search.check(item):
                 linear_search.add(item)
-        assert len(linear_search.items) == answers[i]
+        assert len(linear_search.items) == answers[i].count(False)
 
-# Testing Binary Search Approach
+# Testing Binary Search Method
 def test_lcp_binary_search():
     for i in range(len(tests)): 
         current_test = tests[i]
         binary_search = LCPBinarySearch()
 
-        for item in current_test:
+        for j in range(len(current_test)):
+            item = current_test[j]
+            assert binary_search.check(item) == answers[i][j]
             if not binary_search.check(item):
                 binary_search.add(item)
-        assert len(binary_search.sorted_items) == answers[i]
+        assert len(binary_search.items) == answers[i].count(False)
 
-# Testing Hash Table Approach
+# Testing Hash Table Method
 def test_lcp_hash_table():
     for i in range(len(tests)): 
         current_test = tests[i]
         hash_table = LCPHashTable(11)
 
-        for item in current_test:
+        for j in range(len(current_test)):
+            item = current_test[j]
+            assert hash_table.check(item) == answers[i][j]
             if not hash_table.check(item):
                 hash_table.add(item)
-        assert hash_table.check(current_test[-1])
+        assert len(hash_table.items) == answers[i].count(False)
 
-# Testing Bloom Filter Approach
+# Testing Bloom Filter Method
 def test_lcp_bloom_filter():
-    n = 20 # number of items to add
+    n = 26 # number of items to add
     p = 0.05 # false positive probability
     
     bloom_filter = LCPBloomFilter(n, p)
@@ -85,7 +91,7 @@ def test_lcp_bloom_filter():
     n = 1000000
     bloom_filter = LCPBloomFilter(n, p)
 
-    current_test = generate_strings(1000000, 6)
+    current_test = generate_strings(n, 6)
     inserted_set = set()
     
     for item in current_test:
@@ -104,7 +110,7 @@ def test_lcp_bloom_filter():
 
     assert false_positive_count / len(new_random_strings) <= p
     
-# Testing Cuckoo Filter Approach
+# Testing Cuckoo Filter Method
 def test_lcp_cuckoo_filter():
     n = 40 # number of items to add
     b = 4 # bucket size
@@ -131,7 +137,7 @@ def test_lcp_cuckoo_filter():
     fb = 12 # fingerprint size
     cuckoo_filter = LCPCuckooFilter(n, b, fb, k)
 
-    current_test = generate_strings(1000000, 6)
+    current_test = generate_strings(n, 6)
     inserted_set = set()
     
     for item in current_test:
