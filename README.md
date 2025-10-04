@@ -27,6 +27,9 @@ pip install pandas
 pip install matplotlib
 pip install mmh3
 pip install bitarray
+```
+
+## Running main program
 
 Use command `python benchmark.py <operation> <max_exp>` to run
 
@@ -40,3 +43,7 @@ OR use command `python benchmark.py -plot <operation>` to plot runtime
 - Operation: check, add
 
 e.g., `python benchmark.py -plot add`
+
+## Running unit tests
+
+Use command `pytest` to run the unit tests
