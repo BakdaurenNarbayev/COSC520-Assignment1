@@ -53,7 +53,7 @@ def test_lcp_binary_search():
             assert binary_search.check(item) == answers[i][j]
             if not binary_search.check(item):
                 binary_search.add(item)
-        assert len(binary_search.items) == answers[i].count(False)
+        assert len(binary_search.sorted_items) == answers[i].count(False)
 
 # Testing Hash Table Method
 def test_lcp_hash_table():
