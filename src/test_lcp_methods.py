@@ -66,7 +66,7 @@ def test_lcp_hash_table():
             assert hash_table.check(item) == answers[i][j]
             if not hash_table.check(item):
                 hash_table.add(item)
-        assert len(hash_table.items) == answers[i].count(False)
+        assert sum(len(bucket) for bucket in hash_table.items) == answers[i].count(False)
 
 # Testing Bloom Filter Method
 def test_lcp_bloom_filter():
